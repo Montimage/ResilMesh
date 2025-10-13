@@ -8,7 +8,22 @@ To run the script, you need the following dependencies:
 
 - Python 3.8.10+
 - MMT tools (using [prebuilt packages](mmt-packages)) 
-- `pandas` library (check version in [requirements.txt](requirements.txt)) 
+- Python packages: `pandas`, `numpy`, `scipy` (see [requirements.txt](requirements.txt))
+
+## Installation
+
+Install all required Python packages for testing:
+
+```bash
+pip3 install -r utils/requirements.txt
+```
+Install mmt tools:
+
+```bash
+sudo dpkg -i mmt-packages/mmt-dpi_1.7.4_c5a4a6b_Linux_x86_64.deb 
+sudo dpkg -i mmt-packages/mmt-security_1.2.14_d74aea4_Linux_x86_64.deb 
+sudo dpkg -i mmt-packages/mmt-probe_1.5.5_6765397_Linux_x86_64_pcap.deb 
+```
 
 ## Usage
 

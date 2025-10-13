@@ -132,9 +132,9 @@ def calculateFeatures(ip_traffic, tcp_traffic, tls_traffic):
     #print("SPTime Sequence")
     time = df.groupby(['ip.session_id', 'meta.direction'])['delta'].value_counts(bins=bins_time, sort=False).to_frame()
     df = df.iloc[0:0]
-    time = time.rename(columns={'delta': 'county'}).reset_index()
+    time = time.rename(columns={'delta': 'count'}).reset_index()
     sptime = time.pivot_table(index=['ip.session_id', 'meta.direction'], columns='delta',
-                              values='county')  # ,fill_value=0)
+                              values='count')  # ,fill_value=0)
     sptime.columns = sptime.columns.astype(str)
     sptime = sptime.reset_index()
 
@@ -183,11 +183,11 @@ def calculateFeatures(ip_traffic, tcp_traffic, tls_traffic):
         # tcp_traffic.to_csv('tcp_traffic.csv')
         packet_len = tcp_traffic.groupby(['ip.session_id', 'meta.direction'])['tcp.payload_len'].value_counts(bins=bins_len,
                                                                                                        sort=False).to_frame()
-        packet_len = packet_len.rename(columns={'tcp.payload_len': 'county'}).reset_index()
+        packet_len = packet_len.rename(columns={'tcp.payload_len': 'count'}).reset_index()
 
         # pivot_table to get columns out of segregated and divided packet lengths
         spl = packet_len.pivot_table(index=['ip.session_id', 'meta.direction'], columns='tcp.payload_len',
-                              values='county')  # ,fill_value=0)
+                              values='count')  # ,fill_value=0)
         packet_len = packet_len.iloc[0:0]
         spl.columns = spl.columns.astype(str)
         spl = spl.reset_index()
@@ -404,7 +404,7 @@ def readAndExtractEvents(path):
     report_parent_path = Path(path).parent.absolute()
     ipv4_traffic = extractReport(df, "ipv4-event")
     ipv6_traffic = extractReport(df, "ipv6-event")
-    ip_traffic = ipv4_traffic.append(ipv6_traffic, sort=False)
+    ip_traffic = pd.concat([ipv4_traffic, ipv6_traffic], ignore_index=False, sort=False)
     ip_traffic = ip_traffic.replace(numpy.nan, 0)
     tcp_traffic = extractReport(df, "tcp-event")
     tls_traffic = extractReport(df, "tls-event")
